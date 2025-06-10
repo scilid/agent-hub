@@ -1,12 +1,83 @@
-## LanguageMentor
+# LanguageMentor
 
 LanguageMentor 是一款基于 LLaMA 3.1 或 GPT-4o-mini 的在线英语私教系统，提供英语对话练习和场景化学习训练。用户可以选择不同的场景，或直接与对话代理人进行自由对话，模拟真实生活中的英语交流场景，提升语言能力。
 
-### 版本历史
 
-| 版本号  | 主要特性                                                                                                   | 发布链接                                        |
-|--------|---------------------------------------------------------------------------------------------------------|-----------------------------------------------|
-| v0.1   | - **用户界面**：使用 Gradio 作为用户界面，分 tab 实现了*对话训练*和*场景体验*的UI布局。<br>- **对话训练功能**：通过 Ollama 托管的 `LLaMA 3.1 8B instruct 量化模型`驱动 ChatBot，使用 LangChain Runnables 模块记录对话历史，实现对话训练功能，。 | [访问 v0.1](https://github.com/DjangoPeng/LanguageMentor/tree/v0.1)   |
-| v0.2   | - **新增模拟对话场景：酒店入住（Hotel Checkin）**：实现了完整的酒店多轮（最多20轮）对话，帮助学习者完成酒店入住流程并询问酒店设施。<br>- **新增模拟对话场景：求职面试（Job Interview）**：支持学习者练习自我介绍和回答常见面试问题。面试场景的对话效果还在持续优化中。 | [访问 v0.2](https://github.com/DjangoPeng/LanguageMentor/tree/v0.2)   |
-| v0.3   | - **场景代理重构**：改进了场景代理的架构，提高了响应机制的稳定性和效率。<br>- **ChatBot 引导消息**：新增了每个场景开始时 ChatBot 的欢迎引导消息。<br>- **支持跨场景聊天历史**：为同一用户在不同场景间保持聊天历史，增强了练习的连贯性。 | [访问 v0.3](https://github.com/DjangoPeng/LanguageMentor/tree/v0.3)   |
-| v0.4   | - **新增背单词（Vocabulary Study）功能**：基于对话学习新单词组的含义和用法，支持不断闯关。<br>- **重构 Gradio Tab 代码模块**：将不同 Tab 独立 Python 文件维护。<br>- **定义 Agent 基类**：使用 Python ABC 定义 AgentBase Class，所有的 Agent 基于此类扩展，便于 Agent 模块快速扩展。 | [访问 v0.4](https://github.com/DjangoPeng/LanguageMentor/tree/v0.4)   |
+## 产品设计
+
+- 核心功能：
+  - 基础教学：涵盖词汇积累、语法学习、阅读理解和写作技巧等基础内容。
+  - 对话式训练：模拟真实场景的对话练习，提升学生的口语表达能力和听力理解能力。
+- 用户学习路径：
+  - 初学者：注重词汇和基础语法的学习，通过简单对话练习提高自信心。
+  - 中级学员：结合复杂语法和高级词汇，进行更深入的阅读和写作训练。
+  - 高级学员：重点练习口语和听力，通过模拟真实场景的对话提升实战能力。
+- 课程设计：
+  - 词汇积累：采用词根词缀法和常用词汇表，帮助学生高效记忆单词。
+  - 语法学习：通过系统的语法讲解和练习，夯实学生的语法基础。
+  - 阅读理解：提供不同难度的阅读材料，训练学生的阅读速度和理解能力。
+  - 写作技巧：指导学生如何进行段落和文章的结构化写作。
+
+## 产品演示
+
+https://github.com/user-attachments/assets/6298a8e4-28fc-4a60-badc-59bff16b315e
+
+
+## 快速开始
+以下是快速开始使用 LanguageMentor 的步骤：
+
+1. **克隆仓库**
+   ```bash
+   git clone https://github.com/DjangoPeng/LanguageMentor.git
+   cd LanguageMentor
+   ```
+
+2. **创建 Python 虚拟环境**
+   使用 miniconda 或类似 Python 虚拟环境管理工具，创建一个项目专属的环境，取名为`lm`：
+   ```bash
+   conda create -n lm python=3.10
+   ```
+   激活虚拟环境
+   ```bash
+   conda activate lm
+   ```
+
+3. **配置开发环境**
+   然后运行以下命令安装所需依赖：
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   根据需要配置你的环境变量，例如 `OpenAI_API_KEY` 等。
+
+4. **运行应用**
+   启动应用程序：
+   ```bash
+   python src/main.py
+   ```
+
+5. **开始体验**
+   打开浏览器，访问 `http://localhost:7860`，开始跟着 LanguageMentor 一起学习英语！
+
+   运行画面：
+   ![gradio_demo](images/gradio.png)
+
+   对话练习：
+   ![gradio_demo_0](images/gradio_0.png)
+   ![gradio_demo_1](images/gradio_1.png)
+
+
+## 贡献
+欢迎对本项目做出贡献！你可以通过以下方式参与：
+- 提交问题（Issues）和功能请求
+- 提交拉取请求（Pull Requests）
+- 参与讨论和提供反馈
+
+## 许可证
+本项目采用 Apache 2.0 许可证，详情请参阅 [LICENSE](LICENSE) 文件。
+
+## 联系我们
+
+如果你有任何问题或建议，请通过以下方式联系我：
+- Email: pjt73651@gmail.com
+- GitHub Issues: https://github.com/DjangoPeng/LanguageMentor/issues

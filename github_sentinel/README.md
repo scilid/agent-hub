@@ -1,30 +1,307 @@
+# GitHub Sentinel
 
-## GitHub Sentinel Agent
+![GitHub stars](https://img.shields.io/github/stars/DjangoPeng/GitHubSentinel?style=social)
+![GitHub forks](https://img.shields.io/github/forks/DjangoPeng/GitHubSentinel?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/DjangoPeng/GitHubSentinel?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/DjangoPeng/GitHubSentinel)
+![GitHub language count](https://img.shields.io/github/languages/count/DjangoPeng/GitHubSentinel)
+![GitHub top language](https://img.shields.io/github/languages/top/DjangoPeng/GitHubSentinel)
+![GitHub last commit](https://img.shields.io/github/last-commit/DjangoPeng/GitHubSentinel?color=red)
 
-GitHub Sentinel 是一个工具类 AI Agent，专为开发者和项目经理设计，自动从订阅的 GitHub 仓库中定期（每日/每周）检索和汇总更新。该工具通过订阅管理、更新检索、通知系统和报告生成等功能，提高团队协作效率和项目管理便利性。
+<p align="center">
+    <br> <a href="README-EN.md">English</a> | 中文
+</p>
 
-### 版本历史
+## 目录
 
-| 版本号  | 主要特性                                                                                                   | 发布链接                                        |
-|--------|---------------------------------------------------------------------------------------------------------|-----------------------------------------------|
-| v0.0.1 | - 初始版本测试发布<br>- 基本功能框架搭建                                                                        | [访问 v0.0.1](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.0.1) |
-| v0.1   | - 新增交互式命令行界面 (REPL)<br>- 实现添加、删除和列出订阅的命令<br>- 实现即时更新获取命令<br>- 新增帮助命令显示使用说明<br>- 优化命令行参数解析逻辑<br>- 启动时显示帮助信息<br>- 修复与命令执行和错误处理相关的问题 | [访问 v0.1](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.1)   |
-| v0.2   | - 新增每日进度模块以抓取问题、拉取请求和提交<br>- 集成 OpenAI Python SDK 用于 GPT-4 API 调用<br>- 增强报告生成模块，使用 GPT-4 从 Markdown 文件创建日常项目报告<br>- 优化命令行界面，改进命令处理和帮助显示<br>- 修复多个小问题，提升稳定性 | [访问 v0.2](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.2)   |
-| v0.2.1 | - 修复 `SubscriptionManager` 模块Bug                                                        | [访问 v0.2.1](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.2.1) |
-| v0.3   | - 优化信息收集：只展示合并的 PR 和关闭的 Issue<br>- 时间范围默认设置从每日更新至可配置范围<br>- 增加基于用户定义日期范围的报告导出和生成功能<br>- 集成 Logoru 日志系统，支持持久化和不同级别的日志<br>- 改进 `export_progress_by_date_range` 函数，使文件名格式更清晰，时间范围报告更直观 | [访问 v0.3](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.3)   |
-| v0.3.2   | - 新增 github_client jupyter 文件，演示 GitHubClient 模块的研发和迭代过程，详细说明了如何使用 GitHub REST API 来获取 GitHub Repo 进展。<br>- 新增 report_generator jupyter 文件，演示了如何使用 ReportGenerator 和 LLM 模块来自动生成进展报告。<br> - 为进展获取和报告生成模块新增中文注释 | [访问 v0.3.2](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.3.2) |
-| v0.4   | - 新增多模式运行：<br>  - 命令行工具：交互式运行，手动管理订阅、更新检索和报告生成<br>  - 守护进程：后台服务运行，定期自动处理更新<br>  - Gradio 图形化界面：使用 Gradio 启动 Web 应用，提供用户友好的订阅管理和报告生成界面<br>- 大幅增强 README 文档，详细介绍所有三种操作模式的设置指南，确保用户可以根据自己的需求配置和运行 GitHub Sentinel<br>- 更新守护进程启动命令，提升清晰度和可用性，确保平稳运行和可靠的日志记录<br>- 精炼帮助命令和文档，更好地指导用户配置和操作不同模式的 GitHub Sentinel | [访问 v0.4](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.4)   |
-| v0.4.1   | - 解耦提示词管理：从 llm.py 中提取出提示词定义，通过系统角色实现更灵活和可维护的提示词管理，增强了报告生成任务的内容和格式的自定义能力。<br>- 模型升级：默认大模型从 `GPT-3.5-Turbo` 升级至 `GPT-4o-mini`，提高了文本生成的质量，增加了生成报告的准确性和相关性。<br>- 增加中文注释：为项目的其他模块增加了中文注释，提高了代码的可读性和可维护性，便于中文开发者和用户使用。 | [访问 v0.4.1](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.4.1)   |
-| v0.5   | - 新增定期更新功能：使用 `Schedule` 实现更简单的定时任务，替代原始的 DaemonContext 守护进程与 Threading 守护多线程。<br>- 新增邮件通知功能：实现基础的邮箱通知功能，并在发送时保留报告格式和标题。<br>- 守护进程管理：新增 `daemon_control.sh` 脚本用于管理守护进程，以便于支持容器化部署。<br>- 日志优化：日志输出全面汉化。同时，每次守护进程启动单独生成一份日志，便于查看和分析问题。<br>- 新增 `hacker_news_client.ipynb` 用于演示如何使用 ChatGPT 和 GPT-4o-mini 生成 Hacker News 技术热点趋势报告。 | [访问 v0.5](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.5)   |
-| v0.6   | - 扩展 `LLM Class` 支持调用私有化大模型服务（如：`Ollama`）<br>- 配置管理新增 `llm` 相关配置项，同时支持 `OpenAI GPT` 模型和 `Ollama` 私有化部署模型服务<br>- 更新文档，新增 [`Ollama`安装部署与服务发布](https://github.com/DjangoPeng/GitHubSentinel/blob/v0.6/docs/ollama.md) 文档| [访问 v0.6](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.6)   |
-| v0.7   | - **单元测试增强**：使用 `unittest` 模块在整个项目中引入全面的单元测试。测试覆盖测试框架现在彻底检查关键组件的功能，包括 GitHub 更新获取、电子邮件通知，以及通过 OpenAI 和 Ollama 模型的报告生成等关键组件。新增了 [单元测试详细说明](https://github.com/DjangoPeng/GitHubSentinel/blob/v0.7/docs/unit_test.md) 文档，详细解释了 `unittest` 工具，如 `@patch` 和 `MagicMock`。<br>- **Docker 集成 CI/CD**：实施基于 Docker 的持续集成与部署系统，确保代码在部署前的可靠性。包括：<br>  1.`Dockerfile`，用于构建项目 Docker 镜像，构建过程中运行单元测试。<br>  2. `build_image.sh` 脚本，自动给 Docker 镜像打上当前 Git 分支名的标签。<br>  3. `validate_tests.sh` 脚本，在 Docker 构建过程中执行所有单元测试，如果测试失败则中止构建，确保只部署通过测试的代码。<br> | [访问 v0.7](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.7)   |
-| v0.8   | - **Hacker News 功能扩展**：自动定时获取 Hacker News 的热门话题并总结每日热点趋势。<br>- **Gradio 界面增强**：支持多 Tab 同时展示 GitHub 项目进展和 Hacker News 热点话题。<br>- **DaemonProcess 功能扩展**：支持创建 GitHub 和 Hacker News 的多种定时任务。<br>- **单元测试更新**：包括针对新增的 Hacker News 模块的测试。<br>- **提示词优化**：为 GitHub 项目进展、Hacker News 热门话题及今日趋势设计专门的提示模板。<br>- **Prompts 与 LLM Class 解耦**：由 ReportGenerator 统一管理提示词。 | [访问 v0.8](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.8)   |
-| v0.8.1 | - **使用 Ollama 优化提示词模板**：改进了使用 Ollama 私有化大模型生成 GitHub 项目进展的提示词模板，提高了生成内容的相关性和准确性。<br>- **README.md 文档更新**：在 README.md 中增加产品截图，帮助新用户直观了解应用功能和界面。 | [访问 v0.8.1](https://github.com/DjangoPeng/GitHubSentinel/tree/v0.8.1) |
+- [GitHub Sentinel](#github-sentinel)
+- [主要功能](#主要功能)
+- [产品截图](#产品截图)
+- [快速开始](#快速开始)
+  - [1. 安装依赖](#1-安装依赖)
+  - [2. 配置应用](#2-配置应用)
+  - [3. 如何运行](#3-如何运行)
+    - [A. 作为命令行工具运行](#a-作为命令行工具运行)
+    - [B. 作为后台服务运行](#b-作为后台服务运行)
+    - [C. 作为 Gradio 服务器运行](#c-作为-gradio-服务器运行)
+- [Ollama 安装与服务发布](#Ollama-安装与服务发布)
+- [单元测试](#单元测试)
+  - [单元测试和验证脚本 `validate_tests.sh`](#单元测试和验证脚本-validate_testssh)
+    - [用途](#用途)
+    - [功能](#功能)
+- [使用 Docker 构建与验证](#使用-docker-构建与验证)
+  - [1. `Dockerfile`](#1-dockerfile)
+    - [用途](#用途)
+    - [关键步骤](#关键步骤)
+  - [2. `build_image.sh`](#2-build_imagesh)
+    - [用途](#用途)
+    - [功能](#功能)
+- [贡献](#贡献)
+- [许可证](#许可证)
+- [联系](#联系)
 
-### 项目初始化
-
-我与 ChatGPT 的多轮对话完成了 GitHub Sentinel 项目的早期版本(v0.0.1->v0.2)，详细的对话过程链接：https://chatgpt.com/share/d9b4c3f3-2594-4541-a4a6-e13b3d505ffa
-
-运行 GPT-4 生成的脚本 [setup_github_sentinel.sh](./setup_github_sentinel.sh) 即可生成 v0.0.1 版本完整代码。
 
 
+GitHub Sentinel 是专为大模型（LLMs）时代打造的智能信息检索和高价值内容挖掘 `AI Agent`。它面向那些需要高频次、大量信息获取的用户，特别是开源爱好者、个人开发者和投资人等。
+
+
+### 主要功能
+
+- **订阅管理**：轻松管理和跟踪您关注的 GitHub 仓库。
+- **更新检索**：自动检索并汇总订阅仓库的最新动态，包括提交记录、问题和拉取请求。
+- **通知系统**：通过电子邮件等方式，实时通知订阅者项目的最新进展。
+- **报告生成**：基于检索到的更新生成详细的项目进展报告，支持多种格式和模板，满足不同需求。
+- **多模型支持**：结合 OpenAI 和 Ollama 模型，生成自然语言项目报告，提供更智能、精准的信息服务。
+- **定时任务**：支持以守护进程方式执行定时任务，确保信息更新及时获取。
+- **图形化界面**：基于 Gradio 实现了简单易用的 GUI 操作模式，降低使用门槛。
+- **容器化**：项目支持 Docker 构建和容器化部署，便于在不同环境中快速部署和运行。
+- **持续集成**：实现了完备的单元测试，便于进一步配置生产级 CI/CD 流程，确保项目的稳定性和高质量交付。
+
+GitHub Sentinel 不仅能帮助用户自动跟踪和分析 `GitHub 开源项目` 的最新动态，还能快速扩展到其他信息渠道，如 `Hacker News` 的热门话题，提供更全面的信息挖掘与分析能力。
+
+### 产品截图
+
+**GitHub 项目进度跟踪与总结**
+
+![gradio_v0.8_github](images/gradio_v0.8_github.png)
+
+**Hacker News 热门技术话题挖掘**
+![gradio_v0.8_hn](images/gradio_v0.8_hn.png)
+
+
+## 快速开始
+
+### 1. 安装依赖
+
+首先，安装所需的依赖项：
+
+```sh
+pip install -r requirements.txt
+```
+
+### 2. 配置应用
+
+编辑 `config.json` 文件，以设置您的 GitHub Token、Email 设置（以腾讯企微邮箱为例）、订阅文件、更新设置，大模型服务配置（支持 OpenAI GPT API 和 Ollama 私有化大模型服务）,以及自动检索和生成的报告类型（GitHub项目进展， Hacker News 热门话题和前沿技术趋势）：
+
+```json
+{
+    "github": {
+        "token": "your_github_token",
+        "subscriptions_file": "subscriptions.json",
+        "progress_frequency_days": 1,
+        "progress_execution_time": "08:00"
+    },
+    "email":  {
+        "smtp_server": "smtp.exmail.qq.com",
+        "smtp_port": 465,
+        "from": "from_email@example.com",
+        "password": "your_email_password",
+        "to": "to_email@example.com"
+    },
+    "llm": {
+        "model_type": "ollama",
+        "openai_model_name": "gpt-4o-mini",
+        "ollama_model_name": "llama3",
+        "ollama_api_url": "http://localhost:11434/api/chat"
+    },
+    "report_types": [
+        "github",
+        "hacker_news_hours_topic",
+        "hacker_news_daily_report"
+    ],
+    "slack": {
+        "webhook_url": "your_slack_webhook_url"
+    }
+}
+```
+
+**出于安全考虑:** GitHub Token 和 Email Password 的设置均支持使用环境变量进行配置，以避免明文配置重要信息，如下所示：
+
+```shell
+# Github
+export GITHUB_TOKEN="github_pat_xxx"
+# Email
+export EMAIL_PASSWORD="password"
+```
+
+
+### 3. 如何运行
+
+GitHub Sentinel 支持以下三种运行方式：
+
+#### A. 作为命令行工具运行
+
+您可以从命令行交互式地运行该应用：
+
+```sh
+python src/command_tool.py
+```
+
+在此模式下，您可以手动输入命令来管理订阅、检索更新和生成报告。
+
+#### B. 作为后台服务运行
+
+要将该应用作为后台服务（守护进程）运行，它将根据相关配置定期自动更新。
+
+您可以直接使用守护进程管理脚本 [daemon_control.sh](daemon_control.sh) 来启动、查询状态、关闭和重启：
+
+1. 启动服务：
+
+    ```sh
+    $ ./daemon_control.sh start
+    Starting DaemonProcess...
+    DaemonProcess started.
+    ```
+
+   - 这将启动[./src/daemon_process.py]，按照 `config.json` 中设置的更新频率和时间点定期生成报告，并发送邮件。
+   - 本次服务日志将保存到 `logs/DaemonProcess.log` 文件中。同时，历史累计日志也将同步追加到 `logs/app.log` 日志文件中。
+
+2. 查询服务状态：
+
+    ```sh
+    $ ./daemon_control.sh status
+    DaemonProcess is running.
+    ```
+
+3. 关闭服务：
+
+    ```sh
+    $ ./daemon_control.sh stop
+    Stopping DaemonProcess...
+    DaemonProcess stopped.
+    ```
+
+4. 重启服务：
+
+    ```sh
+    $ ./daemon_control.sh restart
+    Stopping DaemonProcess...
+    DaemonProcess stopped.
+    Starting DaemonProcess...
+    DaemonProcess started.
+    ```
+
+#### C. 作为 Gradio 服务器运行
+
+要使用 Gradio 界面运行应用，允许用户通过 Web 界面与该工具交互：
+
+```sh
+python src/gradio_server.py
+```
+
+
+- 这将在您的机器上启动一个 Web 服务器，允许您通过用户友好的界面管理订阅和生成报告。
+- 默认情况下，Gradio 服务器将可在 `http://localhost:7860` 访问，但如果需要，您可以公开共享它。
+
+
+## Ollama 安装与服务发布
+
+Ollama 是一个私有化大模型管理工具，支持本地和容器化部署，命令行交互和 REST API 调用。
+
+关于 Ollama 安装部署与私有化大模型服务发布的详细说明，请参考[Ollama 安装部署与服务发布](docs/ollama.md)。
+
+### Ollama 简要官方安装
+
+要在 GitHub Sentinel 中使用 Ollama 调用私有化大模型服务，请按照以下步骤进行安装和配置：
+
+1. **安装 Ollama**：
+   请根据 Ollama 的官方文档下载并安装 Ollama 服务。Ollama 支持多种操作系统，包括 Linux、Windows 和 macOS。
+
+2. **启动 Ollama 服务**：
+   安装完成后，通过以下命令启动 Ollama 服务：
+
+   ```bash
+   ollama serve
+   ```
+
+   默认情况下，Ollama API 将在 `http://localhost:11434` 运行。
+
+3. **配置 Ollama 在 GitHub Sentinel 中使用**：
+   在 `config.json` 文件中，配置 Ollama API 的相关信息：
+
+   ```json
+   {
+       "llm": {
+           "model_type": "ollama",
+           "ollama_model_name": "llama3",
+           "ollama_api_url": "http://localhost:11434/api/chat"
+       }
+   }
+   ```
+
+4. **验证配置**：
+   使用以下命令启动 GitHub Sentinel 并生成报告，以验证 Ollama 配置是否正确：
+
+   ```bash
+   python src/command_tool.py
+   ```
+
+   如果配置正确，您将能够通过 Ollama 模型生成报告。
+
+
+
+## 单元测试
+
+为了确保代码的质量和可靠性，GitHub Sentinel 使用了 `unittest` 模块进行单元测试。关于 `unittest` 及其相关工具（如 `@patch` 和 `MagicMock`）的详细说明，请参考 [单元测试详细说明](docs/unit_test.md)。
+
+### 单元测试和验证脚本 `validate_tests.sh`
+
+#### 用途
+`validate_tests.sh` 是一个用于运行单元测试并验证结果的 Shell 脚本。它在 Docker 镜像构建过程中被执行，以确保代码的正确性和稳定性。
+
+#### 功能
+- 脚本运行所有单元测试，并将结果输出到 `test_results.txt` 文件中。
+- 如果测试失败，脚本会输出测试结果并导致 Docker 构建失败。
+- 如果所有测试通过，脚本会继续构建过程。
+
+
+## 使用 Docker 构建与验证
+
+为了便于在各种环境中构建和部署 GitHub Sentinel 项目，我们提供了 Docker 支持。该支持包括以下文件和功能：
+
+### 1. `Dockerfile`
+
+#### 用途
+`Dockerfile` 是用于定义如何构建 Docker 镜像的配置文件。它描述了镜像的构建步骤，包括安装依赖、复制项目文件、运行单元测试等。
+
+#### 关键步骤
+- 使用 `python:3.10-slim` 作为基础镜像，并设置工作目录为 `/app`。
+- 复制项目的 `requirements.txt` 文件并安装 Python 依赖。
+- 复制项目的所有文件到容器，并赋予 `validate_tests.sh` 脚本执行权限。
+- 在构建过程中执行 `validate_tests.sh` 脚本，以确保所有单元测试通过。如果测试失败，构建过程将中止。
+- 构建成功后，将默认运行 `src/main.py` 作为容器的入口点。
+
+### 2. `build_image.sh`
+
+#### 用途
+`build_image.sh` 是一个用于自动构建 Docker 镜像的 Shell 脚本。它从当前的 Git 分支获取分支名称，并将其用作 Docker 镜像的标签，便于在不同分支上生成不同的 Docker 镜像。
+
+#### 功能
+- 获取当前的 Git 分支名称，并将其用作 Docker 镜像的标签。
+- 使用 `docker build` 命令构建 Docker 镜像，并使用当前 Git 分支名称作为标签。
+
+#### 使用示例
+```bash
+chmod +x build_image.sh
+./build_image.sh
+```
+
+![build_docker_image](images/build_docker_image.jpg)
+
+通过这些脚本和配置文件，确保在不同的开发分支中，构建的 Docker 镜像都是基于通过单元测试的代码，从而提高了代码质量和部署的可靠性。
+
+## 贡献
+
+贡献是使开源社区成为学习、激励和创造的惊人之处。非常感谢你所做的任何贡献。如果你有任何建议或功能请求，请先开启一个议题讨论你想要改变的内容。
+
+<a href='https://github.com/repo-reviews/repo-reviews.github.io/blob/main/create.md' target="_blank"><img alt='Github' src='https://img.shields.io/badge/review_me-100000?style=flat&logo=Github&logoColor=white&labelColor=888888&color=555555'/></a>
+
+## 许可证
+
+该项目根据 Apache-2.0 许可证的条款进行许可。详情请参见 [LICENSE](LICENSE) 文件。
+
+## 联系
+
+Django Peng - pjt73651@email.com
+
+项目链接: https://github.com/DjangoPeng/GitHubSentinel
